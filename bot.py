@@ -1,19 +1,8 @@
-from aiogram import Bot, types
-from aiogram import Dispatcher
 from aiogram.utils import executor
-import keyboards as kb
-import messages as msg
+from handlers import start, registration
+from create_bot import dp
 
-from config import TOKEN
+start.register_handler_start(dp)
+registration.register_handlers_reg(dp)
 
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
-
-
-@dp.message_handler(commands=['start'])
-async def process_start_command(message: types.Message):
-    await message.answer(msg.message_start, reply_markup=kb.start)
-
-
-if __name__ == '__main__':
-    executor.start_polling(dp)
+executor.start_polling(dp)
