@@ -2,6 +2,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram import types, Dispatcher
 from attachments import messages as msg
+from attachments import keyboards as kb
 
 
 class Registration(StatesGroup):
@@ -41,6 +42,7 @@ async def finish(message: types.Message, state=FSMContext):
     async with state.proxy() as data:
         data['description'] = message.text
     await state.finish()
+    await message.answer(msg.reg_finish, reply_markup=kb.start)
 
 
 def register_handlers_reg(dp: Dispatcher):
