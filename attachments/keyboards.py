@@ -20,3 +20,21 @@ search_mentor3 = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=search_mento
                                                [KeyboardButton(text=search_mentor_titles[5])],
                                                [KeyboardButton(text=search_mentor_titles[0])], ],
                                      resize_keyboard=True)
+achiever_titles = ['Отмена', 'Звучит круто!', 'Хм, а можно поподробнее об этом', 'Все понятно', 'Что дальше?',
+                   'Ага, знаю', 'Понятно', 'Интересно, сейчас изучу', 'Сделаю это позже']
+achiever1 = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=achiever_titles[1])],
+                                          [KeyboardButton(text=achiever_titles[2])],
+                                          [KeyboardButton(text=achiever_titles[0])], ],
+                                resize_keyboard=True)
+achiever2 = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=achiever_titles[3])],
+                                          [KeyboardButton(text=achiever_titles[4])],
+                                          [KeyboardButton(text=achiever_titles[0])], ],
+                                resize_keyboard=True)
+achiever3 = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=achiever_titles[5])],
+                                          [KeyboardButton(text=achiever_titles[6])],
+                                          [KeyboardButton(text=achiever_titles[0])], ],
+                                resize_keyboard=True)
+achiever4 = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=achiever_titles[7])],
+                                          [KeyboardButton(text=achiever_titles[8])],
+                                          [KeyboardButton(text=achiever_titles[0])], ],
+                                resize_keyboard=True)
