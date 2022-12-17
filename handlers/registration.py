@@ -45,7 +45,7 @@ async def finish(message: types.Message, state=FSMContext):
     await message.answer(msg.reg_finish, reply_markup=kb.start)
 
 
-def register_handlers_reg(dp: Dispatcher):
+def register_handlers(dp: Dispatcher):
     dp.register_message_handler(name, text='Регистрация', state=None)
     dp.register_message_handler(age, state=Registration.name)
     dp.register_message_handler(city, state=Registration.age)
