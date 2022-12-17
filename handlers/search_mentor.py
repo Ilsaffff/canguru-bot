@@ -1,8 +1,12 @@
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.dispatcher import FSMContext
-from aiogram import types, Dispatcher
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
+from aiogram import types, Router
 from attachments import messages as msg
 from attachments import keyboards as kb
+from aiogram.filters import Text
+from aiogram import F
+
+router = Router()
 
 
 class SearchMentor(StatesGroup):
@@ -11,29 +15,27 @@ class SearchMentor(StatesGroup):
     step3 = State()
 
 
-async def step1(message: types.Message):
-    await SearchMentor.step1.set()
+@router.message(F.text == kb.start_titles[1])
+async def step1(message: types.Message, state=FSMContext):
+    await state.set_state(SearchMentor.step1)
     await message.answer(msg.search_mentor1, reply_markup=kb.search_mentor1)
 
 
-async def step2(messsage: types.Message):
-    await SearchMentor.next()
+@router.message(SearchMentor.step1, F.text.in_(kb.search_mentor_titles))
+async def step2(messsage: types.Message, state=FSMContext):
+    await state.set_state(SearchMentor.step2)
     await messsage.answer(msg.search_mentor2, reply_markup=kb.search_mentor2)
 
 
-async def step3(messsage: types.Message):
-    await SearchMentor.next()
+@router.message(SearchMentor.step2, F.text.in_(kb.search_mentor_titles))
+async def step3(messsage: types.Message, state=FSMContext):
+    await state.set_state(SearchMentor.step3)
     await messsage.answer(msg.search_mentor3, reply_markup=kb.search_mentor3)
 
 
-async def finish(messsage: types.Message, state=FSMContext):
-    await state.finish()
-    await messsage.answer(msg.search_mentor4)
-    await messsage.answer(msg.search_mentor5, reply_markup=kb.start)
+@router.message(SearchMentor.step3, F.text.in_(kb.search_mentor_titles))
+async def step2(messsage: types.Message, state=FSMContext):
+    await state.clear()
+    await messsage.answer(msg.search_mentor5)
+    await messsage.answer(msg.search_mentor4, reply_markup=kb.start)
 
-
-def register_handler(dp: Dispatcher):
-    dp.register_message_handler(step1, text='Поиск ментора', state=None)
-    dp.register_message_handler(step2, text='Все понятно!', state=SearchMentor.step1)
-    dp.register_message_handler(step3, text=['Ага, всё понятно!', 'Не-а, объясните ещё раз'], state=SearchMentor.step2)
-    dp.register_message_handler(finish, text=['Интересно, сейчас изучу', 'Сделаю это позже'], state=SearchMentor.step3)

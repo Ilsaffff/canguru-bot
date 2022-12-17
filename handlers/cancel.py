@@ -1,16 +1,23 @@
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.dispatcher import FSMContext
-from aiogram import types, Dispatcher
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
+from aiogram import types, Router, F
+from aiogram.filters import Command
 from attachments import messages as msg
 from attachments import keyboards as kb
-from aiogram.dispatcher.filters import Text
+import logging
+
+router = Router()
 
 
-async def cancel(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer(msg.cancel, reply_markup=kb.start)
+@router.message(F.text == 'Отмена')
+@router.message(F.text.casefold() == "Отмена")
+async def cancel_handler(message: types.Message, state: FSMContext) -> None:
+    current_state = await state.get_state()
+    if current_state is None:
+        return
 
-
-def register_handler(dp: Dispatcher):
-    dp.register_message_handler(cancel, state="*", text='Отмена')
-    dp.register_message_handler(cancel, Text(equals='Отмена', ignore_case=True), state="*")
+    logging.info("Cancelling state %r", current_state)
+    await state.clear()
+    await message.answer(
+        "Отменено.",
+        reply_markup=kb.start)

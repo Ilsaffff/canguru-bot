@@ -1,12 +1,22 @@
-from aiogram.utils import executor
-from handlers import start, cancel, registration, bot_does, who_we, search_mentor
-from create_bot import dp
+import asyncio
+from attachments.config import TOKEN
+from aiogram import Bot, Dispatcher
+from handlers import start, search_mentor, cancel, who_we, registration, bot_does
 
-start.register_handler(dp)
-cancel.register_handler(dp)
-registration.register_handlers(dp)
-bot_does.register_handler(dp)
-who_we.register_handler(dp)
-search_mentor.register_handler(dp)
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
 
-executor.start_polling(dp)
+dp.include_router(start.router)
+dp.include_router(cancel.router)
+dp.include_router(registration.router)
+dp.include_router(search_mentor.router)
+dp.include_router(who_we.router)
+dp.include_router(bot_does.router)
+
+
+async def main():
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
