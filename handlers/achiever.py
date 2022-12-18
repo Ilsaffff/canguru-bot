@@ -4,6 +4,9 @@ from aiogram import types, Router, F
 from attachments import messages as msg
 from attachments import keyboards as kb
 from aiogram.types import ReplyKeyboardRemove
+from data_base.db import DBHelper
+
+db = DBHelper()
 
 router = Router()
 
@@ -18,8 +21,12 @@ class Acheiver(StatesGroup):
 
 @router.message(F.text == kb.start_titles[2])
 async def step1(message: types.Message, state=FSMContext):
-    await state.set_state(Acheiver.step1)
-    await message.answer(msg.achiever1, reply_markup=kb.achiever1)
+    if db.user_regist(user_id=message.from_user.id):
+        await state.set_state(Acheiver.step1)
+        await message.answer(msg.achiever1, reply_markup=kb.achiever1)
+    else:
+        await state.clear()
+        await message.answer('Сначала тебе нужно зарегистрироваться :)', reply_markup=kb.start)
 
 
 @router.message(Acheiver.step1, F.text.in_([kb.achiever_titles[1], kb.achiever_titles[2]]))
@@ -40,7 +47,7 @@ async def step4(message: types.Message, state=FSMContext):
     await message.answer(msg.achiever4, reply_markup=kb.achiever4)
 
 
-@router.message(Acheiver.step4,F.text.in_([kb.achiever_titles[7], kb.achiever_titles[8]]))
+@router.message(Acheiver.step4, F.text.in_([kb.achiever_titles[7], kb.achiever_titles[8]]))
 async def step4(message: types.Message, state=FSMContext):
     await state.set_state(Acheiver.goal)
     await message.answer(msg.achiever5, reply_markup=ReplyKeyboardRemove())
@@ -49,6 +56,8 @@ async def step4(message: types.Message, state=FSMContext):
 @router.message(Acheiver.goal)
 async def step4(message: types.Message, state=FSMContext):
     data = await state.update_data(goal=message.text)
+    db.add_goal(user_id=message.from_user.id,
+                goal=data['goal'])
     await state.clear()
     await message.answer(msg.achiever6)
     await message.answer(msg.achiever7, reply_markup=kb.start)
