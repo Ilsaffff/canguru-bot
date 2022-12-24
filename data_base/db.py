@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from data_base.models import Base, User, Goal
+from config import DB_LOGIN, DB_PASSWORD, DB_FILE
 
 
 class DBHelper:
 
     def __init__(self):
-        self.engine = create_engine("mysql://root:pass@localhost/dbfile")
+        self.engine = create_engine(f"mysql://{DB_LOGIN}:{DB_PASSWORD}@localhost/{DB_FILE}")
         Base.metadata.create_all(self.engine)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()

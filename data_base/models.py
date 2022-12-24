@@ -10,10 +10,10 @@ Base = declarative_base(cls=RepresentableBase)
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    username = Column(String(50))
-    first_name = Column(String(50))
-    age = Column(String(10))
-    city = Column(String(50))
+    username = Column(String(100))
+    first_name = Column(String(100))
+    age = Column(String(100))
+    city = Column(String(100))
     description = Column(String(1000))
     created_day = Column(DateTime, default=date.today())
 
